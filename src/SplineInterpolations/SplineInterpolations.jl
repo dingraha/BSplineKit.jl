@@ -76,7 +76,7 @@ end
 # Construct SplineInterpolation from basis and collocation points.
 function SplineInterpolation(
         ::UndefInitializer, B, x::AbstractVector{Tx}, ::Type{T},
-    ) where {Tx <: Real, T}
+    ) where {Tx, T}
     # Here we construct the collocation matrix and its LU factorisation.
     N = length(B)
     if length(x) != N
@@ -209,7 +209,7 @@ end
 
 # Define B-spline knots from collocation points and B-spline order.
 # Note that the choice is not unique.
-function make_knots(x::AbstractVector{Tx}, k) where {Tx <: Real}
+function make_knots(x::AbstractVector{Tx}, k) where {Tx <: Number}
     Base.require_one_based_indexing(x)
     T = float(Tx)  # just in case Tx is Integer...
     N = length(x)

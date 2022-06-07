@@ -48,7 +48,7 @@ See [`AbstractBSplineBasis`](@ref) for some examples using the alternative
 evaluation syntax `B(x, [op], [T]; [ileft])`, which calls this function.
 """
 @propagate_inbounds function evaluate_all(
-        B::BSplineBasis, x::Real, op::Derivative, ::Type{T}; kws...,
+        B::BSplineBasis, x::Number, op::Derivative, ::Type{T}; kws...,
     ) where {T <: Number}
     _evaluate_all(knots(B), x, BSplineOrder(order(B)), op, T; kws...)
 end
@@ -87,11 +87,11 @@ It also returns a `zone` integer, which is:
 This function is functionally equivalent to de Boor's `INTERV` routine (de Boor
 2001, p. 74).
 """
-function find_knot_interval(ts::AbstractVector, x::Real)
-    if x < first(ts)
+function find_knot_interval(ts::AbstractVector, x::Number)
+    if real(x) < real(first(ts))
         return firstindex(ts), -1
     end
-    i = searchsortedlast(ts, x)
+    i = searchsortedlast(real(ts), real(x))
     Nt = lastindex(ts)
     if i == Nt
         tlast = ts[Nt]
@@ -99,7 +99,7 @@ function find_knot_interval(ts::AbstractVector, x::Real)
             i -= 1
             ts[i] ≠ tlast && break
         end
-        zone = (x > tlast) ? 1 : 0
+        zone = (real(x) > real(tlast)) ? 1 : 0
         return i, zone
     else
         return i, 0  # usual case
@@ -107,7 +107,7 @@ function find_knot_interval(ts::AbstractVector, x::Real)
 end
 
 function _evaluate_all(
-        ts::AbstractVector, x::Real, ::BSplineOrder{k},
+        ts::AbstractVector, x::Number, ::BSplineOrder{k},
         op::Derivative{0}, ::Type{T};
         ileft = nothing,
     ) where {k, T}
@@ -149,7 +149,7 @@ end
 
 # Derivatives
 function _evaluate_all(
-        ts::AbstractVector, x::Real, ::BSplineOrder{k},
+        ts::AbstractVector, x::Number, ::BSplineOrder{k},
         op::Derivative{n}, ::Type{T};
         ileft = nothing,
     ) where {k, n, T}

@@ -331,7 +331,7 @@ function _integral(::BSplineBasis, S::Spline)
 end
 
 function knot_interval(t::AbstractVector, x)
-    n = searchsortedlast(t, x)  # t[n] <= x < t[n + 1]
+    n = searchsortedlast(real(t), real(x))  # t[n] <= x < t[n + 1]
     n == 0 && return nothing    # x < t[1]
 
     Nt = length(t)
